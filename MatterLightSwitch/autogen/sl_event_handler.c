@@ -12,6 +12,7 @@
 #include "sl_bluetooth.h"
 #include "sl_gpio.h"
 #include "gpiointerrupt.h"
+#include "sl_i2cspm_instances.h"
 #include "sl_iostream_rtt.h"
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
@@ -67,6 +68,7 @@ void sl_driver_init(void)
 {
   sl_gpio_init();
   GPIOINT_Init();
+  sl_i2cspm_init_instances();
   sl_pwm_init_instances();
   sl_simple_led_init_instances();
   sl_uartdrv_init_instances();

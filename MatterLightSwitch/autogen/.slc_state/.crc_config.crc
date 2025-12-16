@@ -31,6 +31,7 @@ sl_core_config.h=-2018153270
 sl_device_init_dcdc_config.h=-1956854636
 sl_gp_interface_config.h=1069184913
 sl_hfxo_manager_config.h=511487363
+sl_i2cspm_inst0_config.h=294308019
 sl_main_start_task_config.h=251875913
 sl_matter_config.h=-321358480
 sl_matter_icd_config.h=440727104

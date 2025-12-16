@@ -3,7 +3,7 @@
   "specVersion" : "1.6",
   "version" : 1,
   "metadata" : {
-    "timestamp" : "2025-12-11T19:27:45Z",
+    "timestamp" : "2025-12-16T02:56:17Z",
     "authors" : [ {
       "name" : "Silicon Laboratories, Inc."
     } ],
@@ -5023,6 +5023,30 @@
       "type" : "library",
       "bom-ref" : "simplicity_sdk:2025.6.2:simple_led",
       "name" : "Simple LED",
+      "version" : "2025.6.2",
+      "supplier" : {
+        "name" : "Silicon Laboratories, Inc."
+      },
+      "licenses" : [ {
+        "expression" : "Zlib"
+      } ]
+    }, {
+      "scope" : "required",
+      "type" : "library",
+      "bom-ref" : "simplicity_sdk:2025.6.2:i2cspm",
+      "name" : "I2CSPM",
+      "version" : "2025.6.2",
+      "supplier" : {
+        "name" : "Silicon Laboratories, Inc."
+      },
+      "licenses" : [ {
+        "expression" : "Zlib"
+      } ]
+    }, {
+      "scope" : "required",
+      "type" : "library",
+      "bom-ref" : "simplicity_sdk:2025.6.2:i2cspm_core",
+      "name" : "I2CSPM Core",
       "version" : "2025.6.2",
       "supplier" : {
         "name" : "Silicon Laboratories, Inc."
