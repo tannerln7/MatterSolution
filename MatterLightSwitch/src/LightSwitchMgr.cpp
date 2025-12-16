@@ -206,6 +206,12 @@ void LightSwitchMgr::SwitchActionEventHandler(uint16_t eventType)
     case AppEvent::kEventType_TriggerLevelControlAction:
         LightSwitchMgr::GetInstance().TriggerLevelControlAction(LightSwitchMgr::GetInstance().getStepMode());
         break;
+    case AppEvent::kEventType_IadcTriggerOn:
+        LightSwitchMgr::GetInstance().TriggerLightSwitchAction(LightSwitchMgr::LightSwitchAction::On);
+        break;
+    case AppEvent::kEventType_IadcTriggerOff:
+        LightSwitchMgr::GetInstance().TriggerLightSwitchAction(LightSwitchMgr::LightSwitchAction::Off);
+        break;
     case AppEvent::kEventType_TriggerToggle:
         LightSwitchMgr::GetInstance().TriggerLightSwitchAction(LightSwitchMgr::LightSwitchAction::Toggle);
         break;

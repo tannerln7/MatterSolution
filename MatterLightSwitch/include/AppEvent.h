@@ -38,6 +38,8 @@ struct AppEvent : public BaseAppEvent
         kEventType_TriggerToggle,
         kEventType_Mpr121Poll,
         kEventType_IadcPoll,
+        kEventType_IadcTriggerOn,
+        kEventType_IadcTriggerOff,
     };
 
     union

@@ -96,6 +96,7 @@ uint16_t AppTask::mpr121LastTouchBits = 0;
 float AppTask::mpr121LastPos         = 0.0f;
 uint8_t AppTask::mpr121CurrentLevel  = 0;
 osTimerId_t AppTask::iadcTimer       = nullptr;
+ButtonLadderState AppTask::iadcLastStable = ButtonLadderState::None;
 
 CHIP_ERROR AppTask::AppInit()
 {
@@ -137,7 +138,6 @@ CHIP_ERROR AppTask::AppInit()
     }
     else
     {
-        IadcButtons_StartSingle();
         iadcTimer = osTimerNew(IadcTimerCallback, osTimerPeriodic, this, nullptr);
         if (iadcTimer == nullptr)
         {
@@ -339,23 +339,49 @@ void AppTask::IadcEventHandler(AppEvent * aEvent)
     VerifyOrReturn(aEvent != nullptr);
     VerifyOrReturn(aEvent->Type == AppEvent::kEventType_IadcPoll);
 
-    // Start next conversion; result will be picked up on the next handler run.
-    IadcButtons_StartSingle();
-
     ButtonLadderState stable = ButtonLadderState::None;
     bool changed             = false;
-    if (IadcButtons_Update(&stable, &changed) && changed)
+    uint16_t lastRaw         = 0;
+    if (IadcButtons_Update(&stable, &changed, &lastRaw) && changed)
     {
-        uint16_t raw  = 0;
-        bool isNewRaw = false;
-        if (IadcButtons_TryGetLatest(&raw, &isNewRaw))
+        ButtonLadderState prev = iadcLastStable;
+        iadcLastStable         = stable;
+
+        const char * stateStr = (stable == ButtonLadderState::Button1) ? "Button1"
+                                 : (stable == ButtonLadderState::Button2) ? "Button2"
+                                 : "None";
+        SILABS_LOG("IADC raw=%u stable=%s changed=1", lastRaw, stateStr);
+
+        auto postActionEvent = [](AppEvent::AppEventTypes type) {
+            AppEvent evt      = {};
+            evt.Type          = type;
+            evt.Handler       = AppTask::AppEventHandler;
+            AppTask::GetAppTask().PostEvent(&evt);
+        };
+
+        // Handle transitions: releases and presses.
+        if (prev == ButtonLadderState::Button1 && stable != ButtonLadderState::Button1)
         {
-            const char * stateStr = (stable == ButtonLadderState::Button1) ? "Button1"
-                                     : (stable == ButtonLadderState::Button2) ? "Button2"
-                                     : "None";
-            SILABS_LOG("IADC raw=%u state=%s", raw, stateStr);
+            SILABS_LOG("IADC Button1 released -> ON");
+            postActionEvent(AppEvent::kEventType_IadcTriggerOn);
+        }
+        if (prev != ButtonLadderState::Button1 && stable == ButtonLadderState::Button1)
+        {
+            SILABS_LOG("IADC Button1 pressed");
+        }
+        if (prev == ButtonLadderState::Button2 && stable != ButtonLadderState::Button2)
+        {
+            SILABS_LOG("IADC Button2 released -> OFF");
+            postActionEvent(AppEvent::kEventType_IadcTriggerOff);
+        }
+        if (prev != ButtonLadderState::Button2 && stable == ButtonLadderState::Button2)
+        {
+            SILABS_LOG("IADC Button2 pressed");
         }
     }
+
+    // Start next conversion after processing the current sample.
+    IadcButtons_StartSingle();
 }
 
 CHIP_ERROR AppTask::StartAppTask()
@@ -476,8 +502,9 @@ void AppTask::AppEventHandler(AppEvent * aEvent)
     case AppEvent::kEventType_TriggerLevelControlAction:
         LightSwitchMgr::GetInstance().SwitchActionEventHandler(aEvent->Type);
         break;
-    case AppEvent::kEventType_IadcPoll:
-        IadcEventHandler(aEvent);
+    case AppEvent::kEventType_IadcTriggerOn:
+    case AppEvent::kEventType_IadcTriggerOff:
+        LightSwitchMgr::GetInstance().SwitchActionEventHandler(aEvent->Type);
         break;
     default:
         break;

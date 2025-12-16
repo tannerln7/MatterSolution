@@ -28,6 +28,7 @@
 
 #include "AppEvent.h"
 #include "BaseApplication.h"
+#include "IadcButtons.h"
 #include <ble/Ble.h>
 #include <cmsis_os2.h>
 #include <lib/core/CHIPError.h>
@@ -113,6 +114,7 @@ private:
     static float mpr121LastPos;
     static uint8_t mpr121CurrentLevel;
     static osTimerId_t iadcTimer;
+    static ButtonLadderState iadcLastStable;
 
     /**
      * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()

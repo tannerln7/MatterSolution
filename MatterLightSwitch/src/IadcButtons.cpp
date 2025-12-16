@@ -12,17 +12,41 @@
 #include "em_cmu.h"
 #include "em_gpio.h"
 #include "em_iadc.h"
+#include "em_core.h"
 #include <lib/support/logging/CHIPLogging.h>
 
 namespace {
 
 // ADC input and thresholds
-constexpr uint8_t kAdcBits           = 12;
-constexpr uint16_t kAdcMax           = (1u << kAdcBits) - 1u;
-constexpr uint16_t kThreshNoneMin    = 2400; // treat high readings as "none"
-constexpr uint16_t kThreshBtn2Min    = 950;
-constexpr uint16_t kThreshBtn2Max    = 1900;
-constexpr uint16_t kThreshBtn1Max    = 850;
+constexpr uint8_t kAdcBits         = 12;
+constexpr uint16_t kAdcMax         = (1u << kAdcBits) - 1u; // fixed by IADC_INITSINGLE_DEFAULT alignment
+
+// Ratios from ladder: Button1 ~0.175, Button2 ~0.319, None near 1.0.
+constexpr float kRatioBtn1         = 10.0f / (47.0f + 10.0f);
+constexpr float kRatioBtn2         = 22.0f / (47.0f + 22.0f);
+
+// Hysteresis bands around expected ratios.
+constexpr float kHystFrac          = 0.05f; // +/-5% of full-scale as guard
+
+constexpr uint16_t RatioToCode(float ratio)
+{
+    float scaled = ratio * static_cast<float>(kAdcMax);
+    if (scaled < 0.0f)
+    {
+        scaled = 0.0f;
+    }
+    if (scaled > static_cast<float>(kAdcMax))
+    {
+        scaled = static_cast<float>(kAdcMax);
+    }
+    return static_cast<uint16_t>(scaled + 0.5f);
+}
+
+// Compute window edges.
+constexpr uint16_t kBtn1Max = RatioToCode(kRatioBtn1 + kHystFrac);
+constexpr uint16_t kBtn2Min = RatioToCode(kRatioBtn2 - kHystFrac);
+constexpr uint16_t kBtn2Max = RatioToCode(kRatioBtn2 + kHystFrac);
+constexpr uint16_t kNoneMin = RatioToCode(0.8f); // treat top 20% as "none"
 
 constexpr uint8_t kDebounceCount     = 3;
 
@@ -109,6 +133,8 @@ bool IadcButtons_TryGetLatest(uint16_t * raw, bool * isNew)
         return false;
     }
 
+    CORE_DECLARE_IRQ_STATE;
+    CORE_ENTER_CRITICAL();
     const bool newSample = sNewSample;
     *raw                 = sLastRaw;
     *isNew               = newSample;
@@ -116,27 +142,28 @@ bool IadcButtons_TryGetLatest(uint16_t * raw, bool * isNew)
     {
         sNewSample = false;
     }
+    CORE_EXIT_CRITICAL();
     return true;
 }
 
 ButtonLadderState IadcButtons_ClassifyRaw(uint16_t raw)
 {
-    if (raw >= kThreshNoneMin)
+    if (raw >= kNoneMin)
     {
         return ButtonLadderState::None;
     }
-    if (raw <= kThreshBtn1Max)
+    if (raw <= kBtn1Max)
     {
         return ButtonLadderState::Button1;
     }
-    if (raw >= kThreshBtn2Min && raw <= kThreshBtn2Max)
+    if (raw >= kBtn2Min && raw <= kBtn2Max)
     {
         return ButtonLadderState::Button2;
     }
     return ButtonLadderState::Invalid;
 }
 
-bool IadcButtons_Update(ButtonLadderState * stableStateOut, bool * changed)
+bool IadcButtons_Update(ButtonLadderState * stableStateOut, bool * changed, uint16_t * lastRawOut)
 {
     if (stableStateOut == nullptr || changed == nullptr)
     {
@@ -149,9 +176,17 @@ bool IadcButtons_Update(ButtonLadderState * stableStateOut, bool * changed)
     {
         *stableStateOut = sStable;
         *changed        = false;
+        if (lastRawOut)
+        {
+            *lastRawOut = raw;
+        }
         return false;
     }
 
+    if (lastRawOut)
+    {
+        *lastRawOut = raw;
+    }
     ButtonLadderState classified = IadcButtons_ClassifyRaw(raw);
 
     if (classified == ButtonLadderState::Invalid)

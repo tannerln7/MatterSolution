@@ -27,5 +27,5 @@ bool IadcButtons_TryGetLatest(uint16_t * raw, bool * isNew);
 ButtonLadderState IadcButtons_ClassifyRaw(uint16_t raw);
 
 // Debounce/hysteresis using latest sample; returns true if a new stable state is available. 'changed' indicates transition.
-bool IadcButtons_Update(ButtonLadderState * stableStateOut, bool * changed);
-
+// lastRawOut (optional) returns the raw sample used for the update.
+bool IadcButtons_Update(ButtonLadderState * stableStateOut, bool * changed, uint16_t * lastRawOut = nullptr);
