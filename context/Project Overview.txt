@@ -1,0 +1,147 @@
+## Project goal
+
+Build a **Matter-over-Thread wall-control UI / matter client endpoint** that behaves like a “premium smart dimmer” (Elegrp vibe) but is actually a **controller**:
+
+* **Capacitive touch slider** sets brightness for a *bound* external Matter dimmer/light (Endpoint 1 = dimmer client).
+* **6-LED vertical bar graph** shows the *selected/target* brightness level in real time during touch, and the current-set level when idle.
+* **Two tactile momentary switches** emulate a rocker (top = ON, bottom = OFF) and support **tap patterns** (scene triggers).
+
+already implemented:
+
+* A base **dimmer switch** Matter endpoint client device working:
+
+  * **Endpoint 1:** OnOff + LevelControl **client** controlling an external dimmer via **Binding cluster** (bindings tested in home assistant and it works).
+
+## Hardware summary (from your schematic)
+
+Core parts:
+
+* **Seeed XIAO MG24 (EFR32MG24)** as the MCU/Thread radio.
+* **MPR121QR2** capacitive controller and LED driver over I²C, doing *double duty*:
+
+  * Electrodes **ELE0–ELE5** = the 6-segment capacitive slider (via FPC connector).
+  * Outputs **LED1–LED6** (mapped onto MPR121 LED-capable electrode pins) = 6 indicator LEDs, **sourced by the MPR121** through **100 Ω resistors**; LED cathodes go to GND. 
+* **Two momentary tactile switches on a single MG24 ADC pin** using a resistor ladder:
+
+  * ADC node pulled up to **3.3 V through 47 kΩ (R11)**, plus **0.1 µF (C4)** for filtering.
+  * SW1 pulls the node down through **10 kΩ (R12)**.
+  * SW2 pulls the node down through **22 kΩ (R13)**.
+  * Node feeds **GPIO2/A0**. 
+* I²C wiring and address:
+
+  * MPR121 **ADDR tied to GND ⇒ 0x5A**. 
+  * **SDA/SCL** have **4.7 kΩ pullups** to 3.3 V. 
+  * **IRQ** line is pulled up by **10 kΩ (R10)** and goes to **GPIO3/A1** (your interrupt-capable input). 
+  * **REXT = 75 kΩ (R7)** per MPR121 requirements. 
+
+### ADC ladder expected voltages (useful for thresholding)
+
+Assuming 3.3 V and ideal resistors:
+
+* No press: ~3.3 V
+* SW1 pressed (47k pullup, 10k pulldown): **~0.58 V**
+* SW2 pressed (47k pullup, 22k pulldown): **~1.05 V**
+
+
+## Firmware / codebase architecture:
+
+* building off of a **Simplicity Studio Matter example** (Silabs/CHIP tree integration), and editing in **VS Code** with the official Simplicity Studio extension.
+* Endpoint layout is effectively:
+
+  * **EP1:** Switch/controller (Binding + OnOff client + LevelControl client)
+*  already validated binding behavior with `matterCli` and Home Assistant.
+
+That means the clean mental model is:
+
+**Inputs (MPR121 slider + ADC buttons)** → **AppTask events** → **(a) send Matter client commands on EP1 via bindings** → **LED bar feedback via MPR121 LED outputs**.
+
+## What needs to be implemented
+
+### 1) Low-level drivers
+
+**MPR121 I²C driver**
+Implemented with imported library if possible, otherwise general overview:
+* Init I²C peripheral on MG24 pins you’re using (SDA/SCL nets from schematic). 
+* Implement register read/write helpers.
+* Configure:
+
+  * Touch/release thresholds
+  * Filter/debounce
+  * Electrode enable mask (ELE0–ELE5 as touch inputs; LED pins as LED drivers / GPIO-ish outputs depending on mode)
+  * IRQ behavior (use IRQ for “something changed” to avoid constant polling, especially if you ever go battery-powered)
+
+**ADC driver**
+
+* Configure ADC on **GPIO2/A0**.
+* Sample at a modest rate (e.g., 50–200 Hz) with debounce.
+
+### 2) Capacitive slider → continuous “level” value
+
+The MPR121 gives:
+
+* Binary touch status per electrode
+* “Filtered” values + baseline values per electrode (can estimate *how much* it’s being touched)
+
+**slider algorithm.**
+
+**pseudo-continuous (feels premium)**
+
+* Read filtered/baseline deltas for ELE0–ELE5.
+* Compute a centroid: `pos = sum(i * delta_i) / sum(delta_i)`
+* Map pos (0–5) to 0–255.
+* Add smoothing + hysteresis so it doesn’t jitter.
+
+also detect:
+
+* touch start
+* touch move (level changed)
+* touch end
+
+### 3) LED bar rendering on the MPR121
+
+Implement a small “LED bar” module that can do:
+
+* `SetBar(level_0_255)`
+
+  * Convert to 0–6 LEDs lit
+  * partial-fill effect using PWM on the “next” LED if the MPR121 LED driver mode supports per-pin PWM (nice-to-have)
+* Matter controlled "led bar brightness" attribute for user configureable global brightness adjustment of the led bar
+* Update bar **immediately during touch movement** (local UI responsiveness)
+* Matter configurable idle modes:
+  * stays showing the last commanded level, or
+  * dims to off after x seconds.
+
+LEDs are **sourced by the MPR121**, not the MG24 GPIOs. 
+
+### 4) Buttons (ADC ladder) → actions + tap patterns
+
+Implement:
+
+* ADC threshold decode into states: NONE, SW1, SW2
+* Debounce + press/release detection
+* Action mapping:
+
+  * SW1 short press: ON (and maybe restore last level)
+  * SW2 short press: OFF
+  * Optional: long-press behavior (e.g., press/hold = dim up/down using LevelControl “move” commands)
+  * Tap patterns: 2x/3x taps map to “scene triggers” (either Matter Scenes on a target, or custom app logic)
+
+Rate-limit slider-driven sends:
+
+* Only send when level changes by ≥ N steps or after M ms
+* feels real-time but doesnt spam the network/binding engine
+
+### 6) Synchronization hooks (optional but helpful)
+
+* When *user* changes the target via slider/buttons, update the LED bar immediately (optimistic UI).
+* Potentially (if possible) check bound devices real brightness state and ensure led bar matches correctly to account for brightness changes from other sources (smart app, other dimmers, etc)
+
+## Practical implementation order (min pain)
+
+1. Bring up I²C + confirm MPR121 ACK at **0x5A**. 
+2. Implement MPR121 touch status read → log electrode touches.
+3. Implement LED control (just on/off each LED) to confirm sourcing works. 
+4. Implement ADC button decode → log SW1/SW2 events. 
+5. Wire events into EP1 Matter commands (button ON/OFF first).
+6. Add slider → `MoveToLevelWithOnOff` with throttling + LED bar fill.
+7. Add tap-pattern state machine and any fancy behavior.

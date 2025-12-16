@@ -1,0 +1,11 @@
+{
+	"Configs" : 
+	[
+		"base"
+	],
+	"InstallScripts" : 
+	[
+		"/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterLightSwitch/cmake_gcc/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

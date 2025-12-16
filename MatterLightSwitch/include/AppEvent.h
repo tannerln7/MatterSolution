@@ -36,6 +36,8 @@ struct AppEvent : public BaseAppEvent
         kEventType_FunctionButtonReleased,
         kEventType_TriggerLevelControlAction,
         kEventType_TriggerToggle,
+        kEventType_Mpr121Poll,
+        kEventType_IadcPoll,
     };
 
     union

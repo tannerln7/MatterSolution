@@ -106,6 +106,13 @@ private:
     static bool actionButtonPressed;    // True when button1 is pressed, used to initiate toggle or level-up/down
     static bool actionButtonSuppressed; // True when both button0 and button1 are pressed, used to switch step direction
     static bool isButtonEventTriggered; // True when button0 press event is posted to BaseApplication
+    static osTimerId_t mpr121Timer;
+    static uint32_t mpr121PollIntervalMs;
+    static uint32_t mpr121LastLogMs;
+    static uint16_t mpr121LastTouchBits;
+    static float mpr121LastPos;
+    static uint8_t mpr121CurrentLevel;
+    static osTimerId_t iadcTimer;
 
     /**
      * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
@@ -129,4 +136,11 @@ private:
      *        long-pressed to trigger the level-control action
      */
     void HandleLongPress();
+
+    static void Mpr121TimerCallback(void * timerCbArg);
+    static void Mpr121EventHandler(AppEvent * aEvent);
+    static void UpdateMpr121PollRate(uint32_t intervalMs);
+    static void UpdateMpr121Level(uint8_t level);
+    static void IadcTimerCallback(void * timerCbArg);
+    static void IadcEventHandler(AppEvent * aEvent);
 };

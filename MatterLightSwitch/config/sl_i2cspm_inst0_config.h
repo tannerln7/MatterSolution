@@ -54,15 +54,28 @@
 // <<< sl:start pin_tool >>>
 // <i2c signal=SCL,SDA> SL_I2CSPM_INST0
 // $[I2C_SL_I2CSPM_INST0]
-#warning "I2CSPM I2C peripheral not configured"
-// #define SL_I2CSPM_INST0_PERIPHERAL      I2C0
+#ifndef SL_I2CSPM_INST0_PERIPHERAL              
+#define SL_I2CSPM_INST0_PERIPHERAL               I2C0
+#endif
+#ifndef SL_I2CSPM_INST0_PERIPHERAL_NO           
+#define SL_I2CSPM_INST0_PERIPHERAL_NO            0
+#endif
 
-// #define SL_I2CSPM_INST0_SCL_PORT        SL_GPIO_PORT_C
-// #define SL_I2CSPM_INST0_SCL_PIN         11
+// I2C0 SCL on PC05
+#ifndef SL_I2CSPM_INST0_SCL_PORT                
+#define SL_I2CSPM_INST0_SCL_PORT                 SL_GPIO_PORT_C
+#endif
+#ifndef SL_I2CSPM_INST0_SCL_PIN                 
+#define SL_I2CSPM_INST0_SCL_PIN                  5
+#endif
 
-// #define SL_I2CSPM_INST0_SDA_PORT        SL_GPIO_PORT_C
-// #define SL_I2CSPM_INST0_SDA_PIN         10
-
+// I2C0 SDA on PC04
+#ifndef SL_I2CSPM_INST0_SDA_PORT                
+#define SL_I2CSPM_INST0_SDA_PORT                 SL_GPIO_PORT_C
+#endif
+#ifndef SL_I2CSPM_INST0_SDA_PIN                 
+#define SL_I2CSPM_INST0_SDA_PIN                  4
+#endif
 // [I2C_SL_I2CSPM_INST0]$
 // <<< sl:end pin_tool >>>
 

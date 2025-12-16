@@ -82,6 +82,7 @@ component:
 - {id: EFR32MG24B220F1536IM48}
 - {id: clock_manager}
 - {id: device_init}
+- {id: hal_iadc}
 - instance: [inst0]
   id: i2cspm
 - {id: ot_stack_mtd}

@@ -1,6 +1,9 @@
 # Define minimal required version of CMake.
 cmake_minimum_required(VERSION "3.25")
 
+# Help IDEs/clangd find correct include paths.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Project definition
 project(
 	MatterLightSwitch
@@ -16,9 +19,37 @@ add_executable(MatterLightSwitch
     # Add additional sources here
 )
 
-target_include_directories(MatterLightSwitch PUBLIC
-    # Add additional include paths here
+# Build app-owned MPR121 driver with the same include path set as other app objects.
+target_sources(slc PRIVATE
+    ../src/Mpr121.cpp
+    ../src/IadcButtons.cpp
 )
+
+target_include_directories(MatterLightSwitch PUBLIC
+    ../include
+    ../autogen
+    ../autogen/zap-generated
+    ../config
+)
+
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    add_custom_target(copy_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_CURRENT_LIST_DIR}/../compile_commands.json
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_CURRENT_LIST_DIR}/../../compile_commands.json
+        BYPRODUCTS
+            ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json
+            ${CMAKE_CURRENT_LIST_DIR}/../compile_commands.json
+            ${CMAKE_CURRENT_LIST_DIR}/../../compile_commands.json
+        COMMENT "Copy compile_commands.json for IntelliSense/clangd"
+    )
+endif()
 
 target_compile_definitions(MatterLightSwitch PUBLIC
     # Add additional macros here

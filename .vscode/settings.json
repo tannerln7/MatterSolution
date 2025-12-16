@@ -1,5 +1,6 @@
 {
-    "C_Cpp.default.compileCommands": "${workspaceFolder}/MatterLightSwitch/cmake_gcc/build/build/base/compile_commands.json",
-    "C_Cpp.intelliSenseMode": "linux-gcc-arm"
-  }
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.intelliSenseMode": "linux-gcc-arm",
+    "C_Cpp.errorSquiggles": "enabled"
+}
   
