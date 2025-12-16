@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/Matter-Bootloader-base"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/Matter-Bootloader-(CONFIG).rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/(CONFIG)/Matter-Bootloader-complete.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-build.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-configure.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-download.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-install.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-mkdir.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-patch.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/Matter-Bootloader-prefix/src/Matter-Bootloader-stamp/(CONFIG)/Matter-Bootloader-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"Matter-Bootloader"
+		],
+		"name" : "Matter-Bootloader"
+	}
+}

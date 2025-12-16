@@ -1,0 +1,89 @@
+# Silicon Labs Project Configuration Tools: slcp, v0, Component selection file.
+project_name: Matter-Bootloader
+label: Matter-Bootloader
+description: |
+  This sample configuration of the simplicity bootloader configures the bootloader to use the internal main flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x44000 (or 0x8044000 for device with 0x8000000 flash base), and have a size of 192 kB. This can be configured on the "Storage" tab. This bootloader is compatible with Matter sample examples running on a Series 2 device.
+package: matter
+quality: production
+readme:
+- {path: readme.md}
+- {path: readme.md}
+sdk: {vendor: null, id: simplicity_sdk, version: 2025.6.2}
+toolchain_settings: []
+component:
+- {from: matter, id: matter_syscall_stubs}
+- {id: EFR32MG24B220F1536IM48}
+- {id: bootloader_aes_sha_ecdsa}
+- {id: bootloader_common_storage}
+- {id: bootloader_compression_lzma}
+- {id: bootloader_core}
+- {id: bootloader_crc}
+- {id: bootloader_debug}
+- {id: bootloader_gbl_compression_lz4}
+- {id: bootloader_image_parser}
+- {id: bootloader_internal_storage}
+- {id: bootloader_storage_slots}
+- {id: bootloader_token_management}
+- {id: psa_crypto_config}
+configuration:
+- {name: SLOT0_ENABLE, value: '1'}
+- unless: [device_sdid_225]
+  name: SLOT0_SIZE
+  value: '557056'
+- condition: [device_sdid_200]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '278528'
+- condition: [device_sdid_200]
+  name: SLOT0_START
+  value: '278528'
+- condition: [device_sdid_205]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '278528'
+- condition: [device_sdid_205]
+  name: SLOT0_START
+  value: '278528'
+- condition: [device_sdid_210]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '134496256'
+- condition: [device_sdid_210]
+  name: SLOT0_START
+  value: '134496256'
+- condition: [device_sdid_215]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '135176192'
+- condition: [device_sdid_215]
+  name: SLOT0_START
+  value: '135176192'
+- condition: [device_sdid_215]
+  name: BOOTLOADER_MSC_DMA_CHANNEL
+  value: '4'
+- condition: [device_sdid_220]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '134496256'
+- condition: [device_sdid_220]
+  name: SLOT0_START
+  value: '134496256'
+- condition: [device_sdid_225]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '135847936'
+- condition: [device_sdid_225]
+  name: SLOT0_START
+  value: '135847936'
+- condition: [device_sdid_225]
+  name: SLOT0_SIZE
+  value: '1589248'
+- condition: [device_sdid_230]
+  name: BTL_STORAGE_BASE_ADDRESS
+  value: '134496256'
+- condition: [device_sdid_230]
+  name: SLOT0_START
+  value: '134496256'
+- {name: BOOTLOADER_MSC_DMA_WRITE, value: '0'}
+ui_hints:
+  highlight:
+  - {path: readme.md}
+sdk_extension:
+- {vendor: null, id: matter, version: 2.7.0}
+post_build:
+- {path: Matter-Bootloader.slpb, profile: bootloader_series_2}
+

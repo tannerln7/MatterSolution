@@ -1,0 +1,4 @@
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/Matter-Bootloader/cmake_gcc/build/CMakeFiles/slc.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/Matter-Bootloader/cmake_gcc/build/CMakeFiles/Matter-Bootloader.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/Matter-Bootloader/cmake_gcc/build/CMakeFiles/edit_cache.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/Matter-Bootloader/cmake_gcc/build/CMakeFiles/rebuild_cache.dir

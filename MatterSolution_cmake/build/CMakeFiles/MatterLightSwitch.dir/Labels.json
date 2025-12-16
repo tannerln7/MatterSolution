@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/MatterLightSwitch-base"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/MatterLightSwitch-(CONFIG).rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/(CONFIG)/MatterLightSwitch-complete.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-build.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-configure.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-download.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-install.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-mkdir.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-patch.rule"
+		},
+		{
+			"file" : "/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/MatterLightSwitch-prefix/src/MatterLightSwitch-stamp/(CONFIG)/MatterLightSwitch-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"MatterLightSwitch"
+		],
+		"name" : "MatterLightSwitch"
+	}
+}

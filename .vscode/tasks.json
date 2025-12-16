@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Flash XIAO MG24 (Full image: bootloader + app)",
+      "type": "shell",
+      "command": "sudo",
+      "args": [
+        "${env:HOME}/.arduino15/packages/SiliconLabs/tools/openocd/0.12.0-arduino1-static/bin/openocd",
+        "-d2",
+        "-s",
+        "${env:HOME}/.arduino15/packages/SiliconLabs/tools/openocd/0.12.0-arduino1-static/share/openocd/scripts",
+        "-f", "interface/cmsis-dap.cfg",
+        "-f", "target/efm32s2_g23.cfg",
+        "-c",
+        "init; reset_config srst_nogate; reset halt; program {${workspaceFolder}/artifact/MatterSolution-full.s37}; reset; exit"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Flash XIAO MG24 (App-only hex)",
+      "type": "shell",
+      "command": "sudo",
+      "args": [
+        "${env:HOME}/.arduino15/packages/SiliconLabs/tools/openocd/0.12.0-arduino1-static/bin/openocd",
+        "-d2",
+        "-s",
+        "${env:HOME}/.arduino15/packages/SiliconLabs/tools/openocd/0.12.0-arduino1-static/share/openocd/scripts",
+        "-f", "interface/cmsis-dap.cfg",
+        "-f", "target/efm32s2_g23.cfg",
+        "-c",
+        "init; reset_config srst_nogate; reset halt; program {${workspaceFolder}/MatterLightSwitch/cmake_gcc/build/base/MatterLightSwitch.hex}; reset; exit"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+---
+workspace_name: "MatterSolution"
+label: "light-switch-app-thread-internal-bootloader"
+quality: "production"
+package: "matter"
+description: "Matter solution containing both a Matter bootloader and Light Switch\
+  \ over Thread Example"
+project:
+- id: "application"
+  path: "MatterLightSwitch/MatterLightSwitch.slcp"
+  output: "MatterLightSwitch"
+- id: "bootloader"
+  path: "Matter-Bootloader/Matter-Bootloader.slcp"
+  output: "Matter-Bootloader"
+post_build:
+  profile: ""
+  path: "MatterSolution.slpb"

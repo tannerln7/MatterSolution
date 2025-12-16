@@ -1,0 +1,5 @@
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/MatterLightSwitch.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/Matter-Bootloader.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/postbuild.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/edit_cache.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterSolution_cmake/build/CMakeFiles/rebuild_cache.dir

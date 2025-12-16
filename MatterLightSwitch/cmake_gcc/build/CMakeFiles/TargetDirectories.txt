@@ -1,0 +1,4 @@
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterLightSwitch/cmake_gcc/build/CMakeFiles/slc.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterLightSwitch/cmake_gcc/build/CMakeFiles/MatterLightSwitch.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterLightSwitch/cmake_gcc/build/CMakeFiles/edit_cache.dir
+/home/tannerln7/SimplicityStudio/WorkSpace/MatterSolution/MatterLightSwitch/cmake_gcc/build/CMakeFiles/rebuild_cache.dir
